@@ -1,7 +1,6 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +14,7 @@ using Microsoft.Win32;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
+using System.Data;
 using TestApplication.Model;
 
 namespace TestApplication.ViewModels
@@ -184,6 +184,15 @@ namespace TestApplication.ViewModels
 
 		#endregion
 
+		private bool _enableElements =false;
+
+		public bool EnableElements
+		{
+			get { return _enableElements; }
+			set { _enableElements = value; NotifyOfPropertyChange(() => EnableElements); }
+		}
+
+
 		protected override void OnActivate()
 		{
 			ListBoxElements = new BindableCollection<FrameworkElement>();
@@ -243,13 +252,13 @@ namespace TestApplication.ViewModels
 			{
 				Id = CurrentQuestion,
 				Question = QuestionText,
-				First = FirstAnswerTextBox,
-				Second = SecondAnswerTextBox,
-				Third = ThirdAnswerTextBox,
-				Forth = ForthAnswerTextBox,
-				Fifth = FifthAnswerTextBox,
+				FirstAnswer = FirstAnswerTextBox,
+				SecondAnswer = SecondAnswerTextBox,
+				ThirdAnswer = ThirdAnswerTextBox,
+				ForthAnswer = ForthAnswerTextBox,
+				FifthAnswer = FifthAnswerTextBox,
 				RightAnswer= RadioButtonIsChecked.IndexOf(RadioButtonIsChecked.Where(i=>i==true).FirstOrDefault())+1,
-				Image = imageBytes			
+				QuestionImage = imageBytes			
 			};
 			if(testList.Any(i=>i.Id == CurrentQuestion))
 			{
@@ -288,23 +297,23 @@ namespace TestApplication.ViewModels
 
 			QuestionText = _temp.Question;
 
-			FirstAnswerTextBox = _temp.First;
-			SecondAnswerTextBox = _temp.Second;
-			ThirdAnswerTextBox = _temp.Third;
-			if (!string.IsNullOrWhiteSpace(_temp.Forth))
+			FirstAnswerTextBox = _temp.FirstAnswer;
+			SecondAnswerTextBox = _temp.SecondAnswer;
+			ThirdAnswerTextBox = _temp.ThirdAnswer;
+			if (!string.IsNullOrWhiteSpace(_temp.ForthAnswer))
 			{
-				ForthAnswerTextBox = _temp.Forth;
+				ForthAnswerTextBox = _temp.ForthAnswer;
 				_num = 1;
 				ShowAdditionalAnswer(1);
 			}
-			if (!string.IsNullOrWhiteSpace(_temp.Fifth))
+			if (!string.IsNullOrWhiteSpace(_temp.FifthAnswer))
 			{
 				_num = 2;
 				ShowAdditionalAnswer(2);
-				FifthAnswerTextBox = _temp.Fifth;
+				FifthAnswerTextBox = _temp.FifthAnswer;
 			}
 			_num = 1;
-			if (string.IsNullOrWhiteSpace(_temp.Forth))
+			if (string.IsNullOrWhiteSpace(_temp.ForthAnswer))
 				DeleteBothAnswer();
 
 		}
@@ -315,7 +324,17 @@ namespace TestApplication.ViewModels
 			QuestionImage = null;
 		}
 
-		public void CreateTestClick() => manager.ShowDialog(new CreateTestWindowViewModel());		
+		public void CreateTestClick()
+		{
+			manager.ShowDialog(new CreateTestWindowViewModel());
+			if (!string.IsNullOrWhiteSpace(Helper.GetTestName))
+				EnableElements = true;
+		}	
+
+		public async void SaveTestClick()
+		{
+			await Helper.InsertData(testList);
+		}
 
 		#region AddingAndDeletingAnswer
 		public void ShowAdditionalAnswer(int num)

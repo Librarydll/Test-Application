@@ -8,6 +8,7 @@
         xmlns:myLocal="clr-namespace:TestApplication"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
+        Icon="/Resources/MainIcon.ico"
         Title="Editor" Height="908" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
@@ -38,14 +39,14 @@
                 </Button>
             </ToolBar>
         </DockPanel>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,35,0,0" Grid.RowSpan="2">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,35,0,0" Grid.RowSpan="2" IsEnabled="{Binding EnableElements}">
             <DockPanel  Grid.ColumnSpan="2">
                 <ListBox  ItemsSource="{Binding ListBoxElements}" DockPanel.Dock="Left" SelectedIndex="{Binding ListBoxSelectedIndex,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
                 </ListBox>
             </DockPanel>
         </ScrollViewer>
 
-        <Grid Grid.Column="1" Margin="0,35,0,0" Grid.RowSpan="3">
+        <Grid Grid.Column="1" Margin="0,35,0,0" Grid.RowSpan="3" IsEnabled="{Binding EnableElements}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>

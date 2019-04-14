@@ -160,7 +160,9 @@
   <ItemGroup>
     <Resource Include="Resources\Answer.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\MainIcon.ico" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\SaveIcon.png" />
   </ItemGroup>
