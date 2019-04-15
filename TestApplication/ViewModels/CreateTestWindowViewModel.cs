@@ -38,7 +38,7 @@ namespace TestApplication.ViewModels
 		public  void CreateTestClick(string testName)
 		{
 
-			var tableNames = Helper.GetTableNames("TestDB");
+			var tableNames = Helper<TestClass>.GetTableNames("TestDB");
 
 			if (tableNames.Any(i => i == TestName))
 			{
@@ -46,12 +46,12 @@ namespace TestApplication.ViewModels
 				return;
 			}
 
-			Helper.GetTestName = TestName;
+			Helper<TestClass>.GetTestName = TestName;
 			Task.Run(() =>
 			{
 
-				string _createQuery = Helper.GetCreateQuery(testName);
-				using (IDbConnection connection = new SqlConnection(Helper.CnnVal("TestDB")))
+				string _createQuery = Helper<TestClass>.GetCreateQuery(testName);
+				using (IDbConnection connection = new SqlConnection(Helper<TestClass>.CnnVal("TestDb")))
 				{
 					connection.QueryAsync(_createQuery);
 				}

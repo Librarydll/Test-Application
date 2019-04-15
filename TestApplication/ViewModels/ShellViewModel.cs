@@ -327,13 +327,13 @@ namespace TestApplication.ViewModels
 		public void CreateTestClick()
 		{
 			manager.ShowDialog(new CreateTestWindowViewModel());
-			if (!string.IsNullOrWhiteSpace(Helper.GetTestName))
+			if (!string.IsNullOrWhiteSpace(Helper<TestClass>.GetTestName))
 				EnableElements = true;
 		}	
 
 		public async void SaveTestClick()
 		{
-			await Helper.InsertData(testList);
+			await Helper<TestClass>.InsertData(testList, "TestDb");
 		}
 
 		#region AddingAndDeletingAnswer

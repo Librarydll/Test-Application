@@ -9,7 +9,7 @@ using Dapper;
 using System.Data.SqlClient;
 namespace TestApplication.Model
 {
-	public static class Helper
+	public static class Helper<T> where T: class
 	{
 		public static string GetTestName { get;  set; }
 		public static string CnnVal(string name)
@@ -25,8 +25,9 @@ namespace TestApplication.Model
 				IDataReader reader = connection.ExecuteReader("SELECT NAME FROM sys." + "tables");
 				while (reader.Read())
 					result.Add(reader["name"].ToString());
-				return result;
 			}
+            return result;
+
 		}
 
 		public static string GetCreateQuery(string newTableName)
@@ -45,11 +46,11 @@ namespace TestApplication.Model
 					")";
 		}
 
-		public static async Task InsertData(List<TestClass> test)
+		public static async Task InsertData(List<T> test,string dbName)
 		{
 			if (string.IsNullOrWhiteSpace(GetTestName))
 				return;
-			using (IDbConnection connection = new SqlConnection(CnnVal("TestDB")))
+			using (IDbConnection connection = new SqlConnection(CnnVal(dbName)))
 			{
 				foreach (var item in test)
 				{
