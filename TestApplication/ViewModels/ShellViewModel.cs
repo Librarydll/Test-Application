@@ -2,20 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Shapes;
-using System.IO;
 using TestApplication.MyClasses;
 using Microsoft.Win32;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Data;
 using System.Data;
 using TestApplication.Model;
+using System.Reflection;
+using System.IO;
+using System.Drawing;
 
 namespace TestApplication.ViewModels
 {
@@ -24,8 +19,8 @@ namespace TestApplication.ViewModels
 		#region Field
 		private IWindowManager manager = new WindowManager();
 		private BindableCollection<FrameworkElement> myVar;
-		private List<TestClass> testList = new List<TestClass>();
-		private TestClass testClass = new TestClass();
+		private List<Questions> testList = new List<Questions>();
+		private Questions testClass = new Questions();
 		private UIElements elements = null;
 		private string _firstAnswerTextBox;
 		private string _secondAnswerTextBox;
@@ -35,8 +30,7 @@ namespace TestApplication.ViewModels
 		private string _questionText;
 		private int _selectedIndex;
 		private int _num =1;
-		private byte[] imageBytes = null;
-		private Uri _questionImage;
+		private string _questionImagepath;
 		private Visibility _visibilityborder;
 		private BindableCollection<Visibility> _extraAnswer = new BindableCollection<Visibility> { Visibility.Collapsed, Visibility.Collapsed };
 		private BindableCollection<bool> _radioButtonIsChecked = new BindableCollection<bool> { true, false, false, false, false };
@@ -112,13 +106,13 @@ namespace TestApplication.ViewModels
 			}
 		}
 
-		public Uri QuestionImage
+		public string QuestionImagePath
 		{
-			get { return _questionImage; }
+			get { return _questionImagepath; }
 			set
 			{
-				_questionImage = value;
-				NotifyOfPropertyChange(() => QuestionImage);
+				_questionImagepath = value;
+				NotifyOfPropertyChange(() => QuestionImagePath);
 			}
 		}
 
@@ -219,8 +213,7 @@ namespace TestApplication.ViewModels
 
 			if (open.ShowDialog() == true)
             {
-                imageBytes = converter.ConvertImageToByteArray(open.FileName);
-                QuestionImage = new Uri(open.FileName);
+				QuestionImagePath = open.FileName;
 				VisibilityBorder = Visibility.Visible;
             }
 
@@ -238,17 +231,27 @@ namespace TestApplication.ViewModels
 			NotifyOfPropertyChange(() => GetCountOfQuestions);
 			ClearScreen();
 			DeleteBothAnswer();
+			QuestionImagePath = "";
+
 		}
 
-	
-		
+
+
 		public void SaveClick()
         {
-			if (QuestionImage == null && (string.IsNullOrWhiteSpace(QuestionText)))
+			var _path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "\\Resources\\";
+			var _temp = _path + CurrentQuestion + ".jpg";
+			if (QuestionImagePath == null && (string.IsNullOrWhiteSpace(QuestionText)))
 				return;
 			if (ListBoxElements.Count == 1)
 				return;
-			TestClass _tempClass = new TestClass()
+			if (!string.IsNullOrWhiteSpace(QuestionImagePath))
+			{
+				var converter = new ConverterImage();
+				System.Drawing.Image img = System.Drawing.Image.FromFile(QuestionImagePath);
+				converter.SaveImage(_temp, System.Drawing.Imaging.ImageFormat.Jpeg, img);
+			}
+			Questions _tempClass = new Questions()
 			{
 				Id = CurrentQuestion,
 				Question = QuestionText,
@@ -258,7 +261,7 @@ namespace TestApplication.ViewModels
 				ForthAnswer = ForthAnswerTextBox,
 				FifthAnswer = FifthAnswerTextBox,
 				RightAnswer= RadioButtonIsChecked.IndexOf(RadioButtonIsChecked.Where(i=>i==true).FirstOrDefault())+1,
-				QuestionImage = imageBytes			
+				QuestionImagePath = _temp
 			};
 			if(testList.Any(i=>i.Id == CurrentQuestion))
 			{
@@ -315,25 +318,24 @@ namespace TestApplication.ViewModels
 			_num = 1;
 			if (string.IsNullOrWhiteSpace(_temp.ForthAnswer))
 				DeleteBothAnswer();
-
 		}
-  
+
 		public void CanceSelectedlImage()
 		{
 			VisibilityBorder = Visibility.Collapsed;
-			QuestionImage = null;
+			QuestionImagePath = null;
 		}
 
 		public void CreateTestClick()
 		{
 			manager.ShowDialog(new CreateTestWindowViewModel());
-			if (!string.IsNullOrWhiteSpace(Helper<TestClass>.GetTestName))
+			if (!string.IsNullOrWhiteSpace(HelperSQLIte.GetTestName))
 				EnableElements = true;
 		}	
 
-		public async void SaveTestClick()
+		public  void SaveTestClick()
 		{
-			await Helper<TestClass>.InsertData(testList, "TestDb");
+			HelperSQLIte.SaveCustomer(testList);
 		}
 
 		#region AddingAndDeletingAnswer

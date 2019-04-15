@@ -16,12 +16,6 @@ namespace TestApplication.ViewModels
 	public class CreateTestWindowViewModel : Screen
 	{
 		private string _testName;
-
-		public CreateTestWindowViewModel()
-		{
-
-		}
-
 		public string TestName
 		{
 			get { return _testName; }
@@ -38,7 +32,7 @@ namespace TestApplication.ViewModels
 		public  void CreateTestClick(string testName)
 		{
 
-			var tableNames = Helper<TestClass>.GetTableNames("TestDB");
+			var tableNames = HelperSQLIte.GetTableNames();
 
 			if (tableNames.Any(i => i == TestName))
 			{
@@ -46,17 +40,8 @@ namespace TestApplication.ViewModels
 				return;
 			}
 
-			Helper<TestClass>.GetTestName = TestName;
-			Task.Run(() =>
-			{
-
-				string _createQuery = Helper<TestClass>.GetCreateQuery(testName);
-				using (IDbConnection connection = new SqlConnection(Helper<TestClass>.CnnVal("TestDb")))
-				{
-					connection.QueryAsync(_createQuery);
-				}
-			});
-
+			HelperSQLIte.GetTestName = TestName;
+			HelperSQLIte.CreateTable(testName);
 			MessageBox.Show("The test has just successfully created", "About creating", MessageBoxButton.OK, MessageBoxImage.Information);
 			TryClose();
 

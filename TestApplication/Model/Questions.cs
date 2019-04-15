@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace TestApplication.Model
 {
-	public class TestClass
+	public class Questions
 	{
-
 		public int Id { get; set; }	
 		public string Question { get; set; }
 		public string FirstAnswer { get; set; }
@@ -16,7 +15,7 @@ namespace TestApplication.Model
 		public string ThirdAnswer { get; set; }
 		public string ForthAnswer { get; set; }
 		public string FifthAnswer { get; set; }
-		public byte[] QuestionImage { get; set; }
+		public string QuestionImagePath { get; set; }
 		public int RightAnswer { get; set; }
 	}
 }

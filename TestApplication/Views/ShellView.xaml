@@ -54,7 +54,7 @@
             <WrapPanel Orientation="Vertical" Margin="10" x:Name="wrap">
                 <!--Image of Question-->
                 <Border Style="{StaticResource BorderStyles}" x:Name="Bord" Visibility="{Binding Path=VisibilityBorder}">
-                    <Image Height="150" Width="200" Source="{Binding Path=QuestionImage}"/>
+                    <Image Height="150" Width="200" Source="{Binding Path=QuestionImagePath}"/>
                 </Border>
                     <TextBox Style="{StaticResource QuestionTextBoxStyle}" Text="{Binding QuestionText,UpdateSourceTrigger=LostFocus}" >
                     </TextBox>

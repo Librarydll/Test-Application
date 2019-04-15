@@ -36,6 +36,13 @@ namespace TestApplication.MyClasses
 
 		}
 		//Save Image
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="path">Path where image will be saved</param>
+		/// <param name="format"></param>
+		/// <param name="img"></param>
+		/// //первый аргумент это путь нужно указать где будет храниться и имя файла а последний сама картина
 		public void SaveImage(string path,System.Drawing.Imaging.ImageFormat format,Image img)
 		{
 			using (FileStream fs = new FileStream(path, FileMode.Create))
