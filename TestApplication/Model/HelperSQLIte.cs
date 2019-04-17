@@ -34,7 +34,7 @@ namespace TestApplication.Model
 			}
 		}
 
-		public static void SaveCustomer(List<Questions> test)
+		public static void SaveData(List<Questions> test)
 		{
 			if (string.IsNullOrWhiteSpace(HelperSQLIte.GetTestName))
 				return;

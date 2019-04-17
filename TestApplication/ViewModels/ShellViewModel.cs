@@ -184,6 +184,7 @@ namespace TestApplication.ViewModels
 		{
 			get { return _enableElements; }
 			set { _enableElements = value; NotifyOfPropertyChange(() => EnableElements); }
+
 		}
 
 
@@ -335,7 +336,7 @@ namespace TestApplication.ViewModels
 
 		public  void SaveTestClick()
 		{
-			HelperSQLIte.SaveCustomer(testList);
+			HelperSQLIte.SaveData(testList);
 		}
 
 		#region AddingAndDeletingAnswer
