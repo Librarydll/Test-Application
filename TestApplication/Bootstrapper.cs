@@ -11,11 +11,6 @@ namespace TestApplication
 {
 	public class Bootstrapper : BootstrapperBase
 	{
-		public Bootstrapper(string []args)
-		{
-			MessageBox.Show("Test");
-			Initialize();
-		}
 		public Bootstrapper()
 		{
 			Initialize();

@@ -11,16 +11,16 @@ using TestApplication.Model;
 using System.Reflection;
 using System.IO;
 using System.Drawing;
-
+using System.Xml;
 namespace TestApplication.ViewModels
 {
 	public class ShellViewModel : Screen
 	{
+
 		#region Field
 		private IWindowManager manager = new WindowManager();
 		private BindableCollection<FrameworkElement> myVar;
 		private List<Questions> testList = new List<Questions>();
-		private Questions testClass = new Questions();
 		private UIElements elements = null;
 		private string _firstAnswerTextBox;
 		private string _secondAnswerTextBox;
@@ -34,10 +34,10 @@ namespace TestApplication.ViewModels
 		private Visibility _visibilityborder;
 		private BindableCollection<Visibility> _extraAnswer = new BindableCollection<Visibility> { Visibility.Collapsed, Visibility.Collapsed };
 		private BindableCollection<bool> _radioButtonIsChecked = new BindableCollection<bool> { true, false, false, false, false };
+		private bool isSaved = false;
+		private string fullSavedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 		#endregion
 		#region Properties
-
-
 		public BindableCollection<FrameworkElement> ListBoxElements
 		{
 			get { return myVar; }
@@ -122,7 +122,6 @@ namespace TestApplication.ViewModels
 			set { _visibilityborder = value; NotifyOfPropertyChange(() => VisibilityBorder); }
 		}
 
-
 		public int ListBoxSelectedIndex//Какой элемент был выбран в листбохе
 		{
 			get
@@ -147,7 +146,6 @@ namespace TestApplication.ViewModels
 				NotifyOfPropertyChange(() => ListBoxSelectedIndex);
 			}
 		}
-
 
 		public BindableCollection<Visibility> ExtraAnswer
 		{
@@ -177,16 +175,6 @@ namespace TestApplication.ViewModels
 		public int CurrentQuestion { get; set; } = 1;
 
 		#endregion
-
-		private bool _enableElements =false;
-
-		public bool EnableElements
-		{
-			get { return _enableElements; }
-			set { _enableElements = value; NotifyOfPropertyChange(() => EnableElements); }
-
-		}
-
 
 		protected override void OnActivate()
 		{
@@ -219,7 +207,6 @@ namespace TestApplication.ViewModels
             }
 
         }
-
 		private void AddRectengle(object sender,RoutedEventArgs e)
 		{
 			var _rect = elements.Create();
@@ -227,8 +214,6 @@ namespace TestApplication.ViewModels
 
 			CountOfQuestions +=1;
 			CurrentQuestion = ListBoxElements.Count-1;
-
-
 			NotifyOfPropertyChange(() => GetCountOfQuestions);
 			ClearScreen();
 			DeleteBothAnswer();
@@ -236,18 +221,17 @@ namespace TestApplication.ViewModels
 
 		}
 
-
-
 		public void SaveClick()
         {
 			var _path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "\\Resources\\";
-			var _temp = _path + CurrentQuestion + ".jpg";
+			string _temp = null;
 			if (QuestionImagePath == null && (string.IsNullOrWhiteSpace(QuestionText)))
 				return;
 			if (ListBoxElements.Count == 1)
 				return;
 			if (!string.IsNullOrWhiteSpace(QuestionImagePath))
 			{
+				_temp = _path + CurrentQuestion + ".jpg";
 				var converter = new ConverterImage();
 				System.Drawing.Image img = System.Drawing.Image.FromFile(QuestionImagePath);
 				converter.SaveImage(_temp, System.Drawing.Imaging.ImageFormat.Jpeg, img);
@@ -278,6 +262,7 @@ namespace TestApplication.ViewModels
 			var passedElement = (RectanlgeQuestions)ListBoxElements[CurrentQuestion - 1];
 			elements.TextInsideRct(ref passedElement, QuestionText);
 		}
+
 		private void ClearScreen()
         {
             QuestionText = string.Empty;
@@ -327,18 +312,36 @@ namespace TestApplication.ViewModels
 			QuestionImagePath = null;
 		}
 
-		public void CreateTestClick()
-		{
-			manager.ShowDialog(new CreateTestWindowViewModel());
-			if (!string.IsNullOrWhiteSpace(HelperSQLIte.GetTestName))
-				EnableElements = true;
-		}	
-
 		public  void SaveTestClick()
 		{
-			HelperSQLIte.SaveData(testList);
+			SDClass<Questions> sDClass = new SDClass<Questions>();
+			if (isSaved == false)
+				SaveAsTestClick();
+			else
+			{
+				sDClass.SerializeXml(testList, fullSavedPath);
+			}
 		}
 
+		public void SaveAsTestClick()
+		{
+			SDClass<Questions> sDClass = new SDClass<Questions>();
+			SaveFileDialog saveFile = new SaveFileDialog
+			{
+				Title = "Save test",
+				Filter = "Test files |*.tst",
+				DefaultExt = "test",
+				AddExtension = true
+			};
+
+			if(saveFile.ShowDialog()==true)
+			{
+				var fileName = saveFile.SafeFileName;
+				fullSavedPath = Path.GetFullPath(saveFile.FileName);
+				sDClass.SerializeXml(testList, fullSavedPath);
+				isSaved = true;
+			}
+		}
 		#region AddingAndDeletingAnswer
 		public void ShowAdditionalAnswer(int num)
 		{

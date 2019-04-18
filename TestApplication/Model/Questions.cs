@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace TestApplication.Model
 {
+	[Serializable]
 	public class Questions
 	{
 		public int Id { get; set; }	

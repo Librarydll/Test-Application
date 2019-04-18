@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:TestApplication.Views"
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:myLocal="clr-namespace:TestApplication"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Icon="/Resources/MainIcon.ico"
@@ -25,7 +26,7 @@
 
         <DockPanel Grid.Row="0" Background="LightBlue" Grid.ColumnSpan="2">
             <ToolBar DockPanel.Dock="Top">
-                <Button x:Name="CreateTestClick">
+                <Button x:Name="CreateTestClick" Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="25" Source="/Resources/CreateIcon.png"/>
                         <TextBlock Margin="2" FontSize="15" Text="Create"></TextBlock>
@@ -37,16 +38,22 @@
                         <TextBlock Margin="2" FontSize="15" Text="Save "></TextBlock>
                     </StackPanel>
                 </Button>
+                <Button x:Name="SaveAsTestClick">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="25" Source="/Resources/SaveAsIcon.png" />
+                        <TextBlock Margin="2" FontSize="15" Text="Save as..."></TextBlock>
+                    </StackPanel>
+                </Button>
             </ToolBar>
         </DockPanel>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,35,0,0" Grid.RowSpan="2" IsEnabled="{Binding EnableElements}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,35,0,0" Grid.RowSpan="2">
             <DockPanel  Grid.ColumnSpan="2">
                 <ListBox  ItemsSource="{Binding ListBoxElements}" DockPanel.Dock="Left" SelectedIndex="{Binding ListBoxSelectedIndex,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
                 </ListBox>
             </DockPanel>
         </ScrollViewer>
 
-        <Grid Grid.Column="1" Margin="0,35,0,0" Grid.RowSpan="3" IsEnabled="{Binding EnableElements}">
+        <Grid Grid.Column="1" Margin="0,35,0,0" Grid.RowSpan="3" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
