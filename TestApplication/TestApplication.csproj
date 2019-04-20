@@ -106,10 +106,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="MyClasses\ExtensionRegisterHelper.cs" />
     <Compile Include="Model\Questions.cs" />
-    <Compile Include="MyClasses\ConverterImage.cs" />
-    <Compile Include="MyClasses\SDClass.cs" />
+    <Compile Include="MyClasses\ExtensionRegisterHelper.cs" />
+    <Compile Include="MyClasses\QuestionSerialization.cs" />
     <Compile Include="MyClasses\UIElements.cs" />
     <Compile Include="RectanlgeQuestions.xaml.cs">
       <DependentUpon>RectanlgeQuestions.xaml</DependentUpon>

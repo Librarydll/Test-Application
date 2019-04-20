@@ -60,56 +60,39 @@
             </Grid.RowDefinitions>
             <WrapPanel Orientation="Vertical" Margin="10" x:Name="wrap">
                 <!--Image of Question-->
-                <Border Style="{StaticResource BorderStyles}" x:Name="Bord" Visibility="{Binding Path=VisibilityBorder}">
-                    <Image Height="150" Width="200" Source="{Binding Path=QuestionImagePath}"/>
-                </Border>
-                    <TextBox Style="{StaticResource QuestionTextBoxStyle}" Text="{Binding QuestionText,UpdateSourceTrigger=LostFocus}" >
+                <TextBox Style="{StaticResource QuestionTextBoxStyle}" Text="{Binding QuestionText,UpdateSourceTrigger=LostFocus}" >
                     </TextBox>
-                <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource AddImageButton}" cal:Message.Attach="[Event Click] =[Action InsertImageToBorder('0')]">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Width="25" Source="/Resources/Image.png"/>
-                            <TextBlock Margin="2" FontSize="15" Text="Select Image..."></TextBlock>
-                        </StackPanel>
-                    </Button>
-                    <Button  Style="{StaticResource AddImageButton}" x:Name="CanceSelectedlImage" Content="Cancel" Width="70" >
-                    </Button>
-                </StackPanel>
+                <StackPanel Orientation="Horizontal"/>
             </WrapPanel>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <GroupBox  Header="Fill"  BorderThickness="3" BorderBrush="LightBlue">
                     <StackPanel Margin="10">
                         <!--First-->
-                        <RadioButton Style="{StaticResource RadioButtonStyle}" IsChecked="{Binding RadioButtonIsChecked[0]}"></RadioButton>
-                        <TextBox  Style="{StaticResource AnswerTextBoxStyle}" x:Name="FirstAnswerTextBox">
+                        <TextBox  Style="{StaticResource AnswerTextBoxStyle}" Text="{Binding Path=TextBoxAnwerList[0]}">
                         </TextBox>
                         <Border Height="20"></Border>
                         <!--Second-->
-                        <RadioButton Style="{StaticResource RadioButtonStyle}" IsChecked="{Binding RadioButtonIsChecked[1]}"></RadioButton>
 
-                        <TextBox  Style="{StaticResource AnswerTextBoxStyle}" x:Name="SecondAnswerTextBox">
+                        <TextBox  Style="{StaticResource AnswerTextBoxStyle}" Text="{Binding Path=TextBoxAnwerList[1]}">
                         </TextBox>
                         <Border Height="20"></Border>
                         <!--Third-->
-                        <RadioButton Style="{StaticResource RadioButtonStyle}" IsChecked="{Binding RadioButtonIsChecked[2]}"></RadioButton>
 
-                        <TextBox  Style="{StaticResource AnswerTextBoxStyle}" x:Name="ThirdAnswerTextBox">
+                        <TextBox  Style="{StaticResource AnswerTextBoxStyle}" Text="{Binding Path=TextBoxAnwerList[2]}">
                         </TextBox>
                         <Border Height="20"></Border>
                         <!--Forth-->
 
                         <StackPanel Visibility="{Binding ExtraAnswer[0]}">
-                            <RadioButton Style="{StaticResource RadioButtonStyle}" IsChecked="{Binding RadioButtonIsChecked[3]}"></RadioButton>
-                            <TextBox  Style="{StaticResource AnswerTextBoxStyle}" x:Name="ForthAnswerTextBox">
+                            <TextBox  Style="{StaticResource AnswerTextBoxStyle}" Text="{Binding Path=TextBoxAnwerList[3]}">
                             </TextBox>
                             <Border Height="20"></Border>
                         </StackPanel>
 
                         <!--Fifth-->
                         <StackPanel Visibility="{Binding ExtraAnswer[1]}">
-                            <RadioButton Style="{StaticResource RadioButtonStyle}" IsChecked="{Binding RadioButtonIsChecked[4]}"></RadioButton>
-                            <TextBox  Style="{StaticResource AnswerTextBoxStyle}" x:Name="FifthAnswerTextBox">
+                            <TextBox  Style="{StaticResource AnswerTextBoxStyle}" Text="{Binding Path=TextBoxAnwerList[4]}">
                             </TextBox>
                             <Border Height="20"></Border>
                         </StackPanel>

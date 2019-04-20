@@ -18,22 +18,13 @@ namespace TestApplication.ViewModels
 	{
 
 		#region Field
-		private IWindowManager manager = new WindowManager();
 		private BindableCollection<FrameworkElement> myVar;
 		private List<Questions> testList = new List<Questions>();
 		private UIElements elements = null;
-		private string _firstAnswerTextBox;
-		private string _secondAnswerTextBox;
-		private string _thirdAnswerTextBox;
-		private string _forthAnswerTextBox;
-		private string _fifthAnswerTextBox;
 		private string _questionText;
 		private int _selectedIndex;
-		private int _num =1;
-		private string _questionImagepath;
-		private Visibility _visibilityborder;
+		private int _num = 1;
 		private BindableCollection<Visibility> _extraAnswer = new BindableCollection<Visibility> { Visibility.Collapsed, Visibility.Collapsed };
-		private BindableCollection<bool> _radioButtonIsChecked = new BindableCollection<bool> { true, false, false, false, false };
 		private bool isSaved = false;
 		private string fullSavedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 		#endregion
@@ -47,52 +38,6 @@ namespace TestApplication.ViewModels
 				NotifyOfPropertyChange(() => ListBoxElements);
 			}
 		}
-		public string FirstAnswerTextBox
-		{
-			get { return _firstAnswerTextBox; }
-			set
-			{
-				_firstAnswerTextBox = value;
-				NotifyOfPropertyChange(() => FirstAnswerTextBox);
-			}
-		}
-
-		public string SecondAnswerTextBox
-		{
-			get { return _secondAnswerTextBox; }
-			set
-			{
-				_secondAnswerTextBox = value; NotifyOfPropertyChange(() => SecondAnswerTextBox);
-			}
-		}
-
-		public string ThirdAnswerTextBox
-		{
-			get { return _thirdAnswerTextBox; }
-			set
-			{
-				_thirdAnswerTextBox = value; NotifyOfPropertyChange(() => ThirdAnswerTextBox);
-			}
-		}
-
-		public string ForthAnswerTextBox
-		{
-			get { return _forthAnswerTextBox; }
-			set
-			{
-				_forthAnswerTextBox = value; NotifyOfPropertyChange(() => ForthAnswerTextBox);
-			}
-		}
-
-		public string FifthAnswerTextBox
-		{
-			get { return _fifthAnswerTextBox; }
-			set
-			{
-				_fifthAnswerTextBox = value; NotifyOfPropertyChange(() => FifthAnswerTextBox);
-			}
-		}
-
 		public string QuestionText
 		{
 			get
@@ -105,23 +50,6 @@ namespace TestApplication.ViewModels
 				NotifyOfPropertyChange(() => QuestionText);
 			}
 		}
-
-		public string QuestionImagePath
-		{
-			get { return _questionImagepath; }
-			set
-			{
-				_questionImagepath = value;
-				NotifyOfPropertyChange(() => QuestionImagePath);
-			}
-		}
-
-		public Visibility VisibilityBorder
-		{
-			get { return _visibilityborder; }
-			set { _visibilityborder = value; NotifyOfPropertyChange(() => VisibilityBorder); }
-		}
-
 		public int ListBoxSelectedIndex//Какой элемент был выбран в листбохе
 		{
 			get
@@ -165,16 +93,19 @@ namespace TestApplication.ViewModels
 
 		}
 
-		public BindableCollection<bool> RadioButtonIsChecked
-		{
-			get { return _radioButtonIsChecked; }
-			set { _radioButtonIsChecked = value; NotifyOfPropertyChange(() => RadioButtonIsChecked); }
-		}
-
 		public int CountOfQuestions { get; set; } = 0;
 		public int CurrentQuestion { get; set; } = 1;
 
 		#endregion
+
+
+		private BindableCollection<string> _textBoxList = new BindableCollection<string>() { "1", "2", "3", "4", "5" };
+
+		public BindableCollection<string> TextBoxAnwerList
+		{
+			get { return _textBoxList; }
+			set { _textBoxList = value; }
+		}
 
 		protected override void OnActivate()
 		{
@@ -185,70 +116,42 @@ namespace TestApplication.ViewModels
 			btn.Style = style;
 			btn.Click += new RoutedEventHandler(AddRectengle);
 			ListBoxElements.Add(btn);
-			_visibilityborder = Visibility.Collapsed;
 		}
 
-		public void InsertImageToBorder(string temp)
-        {
-			int index = Convert.ToInt16(temp);
-            ConverterImage converter = new ConverterImage();
-			
-			OpenFileDialog open = new OpenFileDialog
-			{
-				Title = "Image Scource",
-				Multiselect = false,
-				Filter = "Image File |*.jpg;*.png"
-			};
-
-			if (open.ShowDialog() == true)
-            {
-				QuestionImagePath = open.FileName;
-				VisibilityBorder = Visibility.Visible;
-            }
-
-        }
-		private void AddRectengle(object sender,RoutedEventArgs e)
+		private void AddRectengle(object sender, RoutedEventArgs e)
 		{
 			var _rect = elements.Create();
-			ListBoxElements.Insert(ListBoxElements.Count-1, _rect);
+			ListBoxElements.Insert(ListBoxElements.Count - 1, _rect);
 
-			CountOfQuestions +=1;
-			CurrentQuestion = ListBoxElements.Count-1;
+			CountOfQuestions += 1;
+			CurrentQuestion = ListBoxElements.Count - 1;
 			NotifyOfPropertyChange(() => GetCountOfQuestions);
 			ClearScreen();
 			DeleteBothAnswer();
-			QuestionImagePath = "";
 
 		}
 
 		public void SaveClick()
-        {
+		{
+			List<string> _localWrongAnswerList = new List<string>();
+
+			var _tempich = TextBoxAnwerList.Skip(1);
+			_localWrongAnswerList.AddRange(TextBoxAnwerList.Skip(1));
+
 			var _path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "\\Resources\\";
 			string _temp = null;
-			if (QuestionImagePath == null && (string.IsNullOrWhiteSpace(QuestionText)))
+			if (string.IsNullOrWhiteSpace(QuestionText))
 				return;
 			if (ListBoxElements.Count == 1)
-				return;
-			if (!string.IsNullOrWhiteSpace(QuestionImagePath))
-			{
-				_temp = _path + CurrentQuestion + ".jpg";
-				var converter = new ConverterImage();
-				System.Drawing.Image img = System.Drawing.Image.FromFile(QuestionImagePath);
-				converter.SaveImage(_temp, System.Drawing.Imaging.ImageFormat.Jpeg, img);
-			}
+				return;		
 			Questions _tempClass = new Questions()
 			{
 				Id = CurrentQuestion,
 				Question = QuestionText,
-				FirstAnswer = FirstAnswerTextBox,
-				SecondAnswer = SecondAnswerTextBox,
-				ThirdAnswer = ThirdAnswerTextBox,
-				ForthAnswer = ForthAnswerTextBox,
-				FifthAnswer = FifthAnswerTextBox,
-				RightAnswer= RadioButtonIsChecked.IndexOf(RadioButtonIsChecked.Where(i=>i==true).FirstOrDefault())+1,
-				QuestionImagePath = _temp
+				RightAnswer = TextBoxAnwerList[0],
+				WrongAnswer = _localWrongAnswerList
 			};
-			if(testList.Any(i=>i.Id == CurrentQuestion))
+			if (testList.Any(i => i.Id == CurrentQuestion))
 			{
 				var subList = testList.Where(x => x.Id == CurrentQuestion).ToList();
 				testList.RemoveAll(x => x.Id == CurrentQuestion);
@@ -264,68 +167,60 @@ namespace TestApplication.ViewModels
 		}
 
 		private void ClearScreen()
-        {
-            QuestionText = string.Empty;
-            FirstAnswerTextBox = string.Empty;
-            SecondAnswerTextBox = string.Empty;
-            ThirdAnswerTextBox = string.Empty;
-            ForthAnswerTextBox = string.Empty;
-            FifthAnswerTextBox = string.Empty;
-
-        }
+		{
+			QuestionText = string.Empty;
+			TextBoxAnwerList[0] = "";
+			TextBoxAnwerList[1] = "";
+			TextBoxAnwerList[2] = "";
+			TextBoxAnwerList[3] = "";
+			TextBoxAnwerList[4] = "";
+		}
 
 		private void ShowCurrentQuestion()
 		{
 			ClearScreen();
 			DeleteBothAnswer();
-			   _num = 1;
+			_num = 1;
 			if (!testList.Any(i => i.Id == CurrentQuestion))
 				return;
 
 			var _temp = testList.Where(i => i.Id == CurrentQuestion).FirstOrDefault();
-
 			QuestionText = _temp.Question;
 
-			FirstAnswerTextBox = _temp.FirstAnswer;
-			SecondAnswerTextBox = _temp.SecondAnswer;
-			ThirdAnswerTextBox = _temp.ThirdAnswer;
-			if (!string.IsNullOrWhiteSpace(_temp.ForthAnswer))
+			TextBoxAnwerList[0] = _temp.RightAnswer;
+			TextBoxAnwerList[1] = _temp.WrongAnswer[0];
+			TextBoxAnwerList[2] = _temp.WrongAnswer[1];
+			if (!string.IsNullOrWhiteSpace(_temp.WrongAnswer[2]))
 			{
-				ForthAnswerTextBox = _temp.ForthAnswer;
+				TextBoxAnwerList[2] = _temp.WrongAnswer[2];
 				_num = 1;
 				ShowAdditionalAnswer(1);
 			}
-			if (!string.IsNullOrWhiteSpace(_temp.FifthAnswer))
+			if (!string.IsNullOrWhiteSpace(_temp.WrongAnswer[3]))
 			{
 				_num = 2;
 				ShowAdditionalAnswer(2);
-				FifthAnswerTextBox = _temp.FifthAnswer;
+				TextBoxAnwerList[3] = _temp.WrongAnswer[3];
 			}
 			_num = 1;
-			if (string.IsNullOrWhiteSpace(_temp.ForthAnswer))
+			if (string.IsNullOrWhiteSpace(_temp.WrongAnswer[1]))
 				DeleteBothAnswer();
 		}
-
-		public void CanceSelectedlImage()
+	
+		public void SaveTestClick()
 		{
-			VisibilityBorder = Visibility.Collapsed;
-			QuestionImagePath = null;
-		}
-
-		public  void SaveTestClick()
-		{
-			SDClass<Questions> sDClass = new SDClass<Questions>();
+			QuestionSerialization serialization = new QuestionSerialization();
 			if (isSaved == false)
 				SaveAsTestClick();
 			else
 			{
-				sDClass.SerializeXml(testList, fullSavedPath);
+				serialization.Serialize(fullSavedPath, testList);
 			}
 		}
 
 		public void SaveAsTestClick()
 		{
-			SDClass<Questions> sDClass = new SDClass<Questions>();
+			QuestionSerialization serialization = new QuestionSerialization();
 			SaveFileDialog saveFile = new SaveFileDialog
 			{
 				Title = "Save test",
@@ -334,11 +229,11 @@ namespace TestApplication.ViewModels
 				AddExtension = true
 			};
 
-			if(saveFile.ShowDialog()==true)
+			if (saveFile.ShowDialog() == true)
 			{
 				var fileName = saveFile.SafeFileName;
 				fullSavedPath = Path.GetFullPath(saveFile.FileName);
-				sDClass.SerializeXml(testList, fullSavedPath);
+				serialization.Serialize(fullSavedPath, testList);
 				isSaved = true;
 			}
 		}
