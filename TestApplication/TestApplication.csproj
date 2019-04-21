@@ -109,6 +109,7 @@
     <Compile Include="Model\Questions.cs" />
     <Compile Include="MyClasses\ExtensionRegisterHelper.cs" />
     <Compile Include="MyClasses\QuestionSerialization.cs" />
+    <Compile Include="MyClasses\RandomHelper.cs" />
     <Compile Include="MyClasses\UIElements.cs" />
     <Compile Include="RectanlgeQuestions.xaml.cs">
       <DependentUpon>RectanlgeQuestions.xaml</DependentUpon>

@@ -12,5 +12,10 @@ namespace TestApplication.Model
 		public string Question { get; set; }
 		public string RightAnswer { get; set; }
 		public List<string> WrongAnswer { get; set; }
+
+		public Questions()
+		{
+			WrongAnswer = new List<string>();
+		}
 	}
 }
