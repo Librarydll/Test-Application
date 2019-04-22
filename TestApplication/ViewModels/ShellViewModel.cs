@@ -97,16 +97,12 @@ namespace TestApplication.ViewModels
 		public int CurrentQuestion { get; set; } = 1;
 
 		#endregion
-
-
 		private BindableCollection<string> _textBoxList = new BindableCollection<string>() { "1", "2", "3", "4", "5" };
-
 		public BindableCollection<string> TextBoxAnwerList
 		{
 			get { return _textBoxList; }
 			set { _textBoxList = value; }
 		}
-
 		protected override void OnActivate()
 		{
 			ListBoxElements = new BindableCollection<FrameworkElement>();
@@ -117,7 +113,6 @@ namespace TestApplication.ViewModels
 			btn.Click += new RoutedEventHandler(AddRectengle);
 			ListBoxElements.Add(btn);
 		}
-
 		private void AddRectengle(object sender, RoutedEventArgs e)
 		{
 			var _rect = elements.Create();
@@ -192,7 +187,7 @@ namespace TestApplication.ViewModels
 			TextBoxAnwerList[2] = _temp.WrongAnswer[1];
 			if (!string.IsNullOrWhiteSpace(_temp.WrongAnswer[2]))
 			{
-				TextBoxAnwerList[2] = _temp.WrongAnswer[2];
+				TextBoxAnwerList[3] = _temp.WrongAnswer[2];
 				_num = 1;
 				ShowAdditionalAnswer(1);
 			}
@@ -200,7 +195,7 @@ namespace TestApplication.ViewModels
 			{
 				_num = 2;
 				ShowAdditionalAnswer(2);
-				TextBoxAnwerList[3] = _temp.WrongAnswer[3];
+				TextBoxAnwerList[4] = _temp.WrongAnswer[3];
 			}
 			_num = 1;
 			if (string.IsNullOrWhiteSpace(_temp.WrongAnswer[1]))
@@ -225,7 +220,7 @@ namespace TestApplication.ViewModels
 			{
 				Title = "Save test",
 				Filter = "Test files |*.tst",
-				DefaultExt = "test",
+				DefaultExt = "tst",
 				AddExtension = true
 			};
 
@@ -235,6 +230,35 @@ namespace TestApplication.ViewModels
 				fullSavedPath = Path.GetFullPath(saveFile.FileName);
 				serialization.Serialize(fullSavedPath, testList);
 				isSaved = true;
+			}
+		}
+
+		public void OpenTestClick()
+		{
+			QuestionSerialization serialization = new QuestionSerialization();
+			OpenFileDialog open = new OpenFileDialog
+			{
+				Title = "Opne test",
+				Filter = "Test files |*.tst",
+			};
+			if(open.ShowDialog()==true)
+			{
+				testList = serialization.Deserialize2(open.FileName);
+				foreach (var item in testList)
+				{
+					var _rect = elements.Create();
+					ListBoxElements.Insert(ListBoxElements.Count - 1, _rect);
+
+					CountOfQuestions += 1;
+					CurrentQuestion = ListBoxElements.Count - 1;
+					NotifyOfPropertyChange(() => GetCountOfQuestions);
+					var passedElement = (RectanlgeQuestions)ListBoxElements[CurrentQuestion - 1];
+					elements.TextInsideRct(ref passedElement, item.Question);
+
+					ClearScreen();
+					DeleteBothAnswer();
+				}
+
 			}
 		}
 		#region AddingAndDeletingAnswer

@@ -18,6 +18,7 @@ namespace TestApplication.MyClasses
 			{
 				foreach (var item in questionList)
 				{
+					stream.WriteLine("Id" + item.Id);
 					stream.WriteLine("=" + item.Question);
 					stream.WriteLine("+" + item.RightAnswer);
 					foreach (var wrong in item.WrongAnswer)
@@ -38,12 +39,17 @@ namespace TestApplication.MyClasses
 				string line;
 				while ((line = stream.ReadLine()) != null)
 				{
-					if (line.StartsWith("="))
+					if (line.StartsWith("Id"))
 					{
 						_tempQuestions = new Questions
 						{
-							Question = line.Replace("=", "")
+							Id = Convert.ToInt32(line.Replace("Id", ""))
 						};
+					}
+					if (line.StartsWith("="))
+					{
+
+						_tempQuestions.Question = line.Replace("=", "");
 					}
 					if (line.StartsWith("+"))
 					{
@@ -69,5 +75,46 @@ namespace TestApplication.MyClasses
 			}
 			return questionsList;
 		}
+		public List<Questions> Deserialize2(string path)
+		{
+			Questions _tempQuestions = null;
+			string tempRight = "";
+			using (StreamReader stream = new StreamReader(path))
+			{
+				var tempStream = stream;
+				string line;
+				while ((line = stream.ReadLine()) != null)
+				{
+					if (line.StartsWith("Id"))
+					{
+						_tempQuestions = new Questions
+						{
+							Id = Convert.ToInt32(line.Replace("Id", ""))
+						};
+					}
+					if (line.StartsWith("="))
+					{
+
+						_tempQuestions.Question = line.Replace("=", "");
+					}
+					if (line.StartsWith("+"))
+					{
+						_tempQuestions.RightAnswer = line.Replace("+", "");
+						tempRight = line.Replace("+", "");
+					}
+					if (line.StartsWith("-"))
+					{
+						_tempQuestions.WrongAnswer.Add(line.Replace("-", ""));
+
+					}
+					if (line.StartsWith("<!>"))
+					{
+						questionsList.Add(_tempQuestions);
+					}
+				}
+			}
+			return questionsList;
+		}
 	}
 }
+

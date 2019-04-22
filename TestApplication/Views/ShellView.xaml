@@ -26,10 +26,10 @@
 
         <DockPanel Grid.Row="0" Background="LightBlue" Grid.ColumnSpan="2">
             <ToolBar DockPanel.Dock="Top">
-                <Button x:Name="CreateTestClick" Visibility="Collapsed">
+                <Button x:Name="OpenTestClick">
                     <StackPanel Orientation="Horizontal">
-                        <Image Width="25" Source="/Resources/CreateIcon.png"/>
-                        <TextBlock Margin="2" FontSize="15" Text="Create"></TextBlock>
+                        <Image Width="25" Source="/Resources/OpenIcon.png"/>
+                        <TextBlock Margin="2" FontSize="15" Text="Open"></TextBlock>
                     </StackPanel>
                 </Button>
                 <Button x:Name="SaveTestClick">
